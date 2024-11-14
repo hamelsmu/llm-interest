@@ -77,8 +77,10 @@ def get(page: int = 1):
     card = Card(Table(table_header, *table_body, id='todo-list'),
                 header=add, footer=pagination_controls),
     ck = (H2("Step 2. Sign Up To Get Updates On LLM Evals "),
-          P("You’ll be the first to know about educational materials.  No spam."),
-          NotStr('<script async data-uid="a7628dbdca" src="https://hamel.kit.com/a7628dbdca/index.js"></script>')
+          P("You’ll be the first to know about educational materials. No spam."),
+          NotStr('<script async data-uid="a7628dbdca" src="https://hamel.kit.com/a7628dbdca/index.js"></script>'),
+          Br(),
+          P("See the ", A("FAQ", href="/faq", style="font-size: 0.9em;"), " for more info.")
     )
 
     footer = Div(
@@ -141,5 +143,18 @@ def upvote(id: int):
     todos.upsert(todo)
     # Return a response that triggers a page reload
     return Redirect("/")
+
+@rt("/faq")
+def faq():
+    return Title("FAQ"), Main(
+        A("Back", href="/", style="font-size: 0.9em;"),
+        Br(), Br(),
+        H2("FAQ"),
+        H3("Q: Why are you doing this?"),
+        P("Through my consulting, I get to see patterns of where people get stuck the most. LLM Evals are the one area people get stuck on that also has the most business impact. At the same time, there is very little information available on how to do build them. I can’t offer consulting to everyone. The best way to help is to create materials everyone can read."),
+        H3("Q: What’s the cost?"),
+        P("My goal is to to give away as much information for free as possible. I may end up doing a paid course if there is demand. However, I won’t start there."),
+        cls='container'
+    )
 
 serve()
