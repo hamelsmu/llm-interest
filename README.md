@@ -6,6 +6,8 @@ python main.py
 
 ## Deploying
 
+_This will only work for hamel_
+
 ```bash
 railway up
 ```
