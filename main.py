@@ -15,9 +15,9 @@ def tid(id): return f'todo-{id}'
 @patch
 def __ft__(self:Todo):
     topic_display = self.title
-    upvote_link = AX('👍', f'/upvote/{self.id}', id=tid(self.id), cls='upvote-link')
-    upvotes_display = f'{self.upvotes or 0}'
-    return Tr(Td(topic_display), Td(upvotes_display), Td(upvote_link), id=tid(self.id))
+    upvote_link = AX('👍', f'/upvote/{self.id}', id=tid(self.id), cls='upvote-link', hx_post=f'/upvote/{self.id}', hx_target=f'#upvote-count-{self.id}', hx_swap='innerHTML')
+    upvotes_display = Td(f'{self.upvotes or 0}', id=f'upvote-count-{self.id}')
+    return Tr(Td(topic_display), upvotes_display, Td(upvote_link), id=tid(self.id))
 
 def mk_input(**kw): return Input(id="new-title", name="title", placeholder="New Item", required=True, **kw)
 
@@ -141,8 +141,9 @@ def upvote(id: int):
         todo.upvotes = 0
     todo.upvotes += 1
     todos.upsert(todo)
-    # Return a response that triggers a page reload
-    return Redirect("/")
+    
+    # Return the updated upvote count as HTML
+    return f'{todo.upvotes}'
 
 @rt("/faq")
 def faq():
