@@ -31,12 +31,7 @@ def healthcheck():
     return "ok"
 
 @rt("/")
-def get(page: int = 1):
-    items_per_page = 10
-    start = (page - 1) * items_per_page
-    end = start + items_per_page
-
-    # Introductory information
+def get():
     intro = Div(
         P("Hi, I’m ", A("Hamel Husain", href="https://hamel.dev/"), ". I ", 
           A("", href="https://parlance-labs.com/"), 
@@ -57,25 +52,12 @@ def get(page: int = 1):
 
     add = Form(Group(mk_input(), Button("Add")),
                hx_post="/", target_id='todo-list', hx_swap="beforeend")
-    table_header = Tr(Th("Topic"), Th("Num Upvotes"), Th("Upvote"))
-    
-    # Sort todos by upvotes in descending order
-    sorted_todos = sorted(todos(), key=lambda todo: todo.upvotes or 0, reverse=True)
-    
-    # Paginate topics
-    table_body = [todo.__ft__() for todo in sorted_todos[start:end]]
 
-    # Pagination controls
-    total_pages = (len(sorted_todos) + items_per_page - 1) // items_per_page
-    pagination_controls = Div(
-        Span(f"Page {page} of {total_pages} | "),
-        A("Previous", href=f"/?page={page-1}", cls="prev") if page > 1 else "",
-        A("Next", href=f"/?page={page+1}", cls="next") if page < total_pages else "",
-        cls="pagination"
+    card = Card(
+        Div(id='todo-list', hx_get="/table", hx_trigger="load"),
+        header=add
     )
 
-    card = Card(Table(table_header, *table_body, id='todo-list'),
-                header=add, footer=pagination_controls),
     ck = (H2("Step 2. Sign Up To Get Updates On LLM Evals "),
           P("You’ll be the first to know about educational materials. No spam."),
           NotStr('<script async data-uid="a7628dbdca" src="https://hamel.kit.com/a7628dbdca/index.js"></script>'),
@@ -157,5 +139,32 @@ def faq():
         P("My goal is to to give away as much information for free as possible. I may end up doing a paid course if there is demand. However, I won’t start there."),
         cls='container'
     )
+
+@rt("/table")
+def get_table(page: int = 1):
+    items_per_page = 10
+    start = (page - 1) * items_per_page
+    end = start + items_per_page
+
+    # Sort todos by upvotes in descending order
+    sorted_todos = sorted(todos(), key=lambda todo: todo.upvotes or 0, reverse=True)
+    
+    # Paginate topics
+    table_body = [todo.__ft__() for todo in sorted_todos[start:end]]
+
+    # Pagination controls
+    total_pages = (len(sorted_todos) + items_per_page - 1) // items_per_page
+    pagination_controls = Div(
+        Span(f"Page {page} of {total_pages} | "),
+        A("Previous", href=f"/table?page={page-1}", cls="prev", hx_get=f"/table?page={page-1}", hx_target="#todo-list", hx_swap="innerHTML") if page > 1 else "",
+        A("Next", href=f"/table?page={page+1}", cls="next", hx_get=f"/table?page={page+1}", hx_target="#todo-list", hx_swap="innerHTML") if page < total_pages else "",
+        cls="pagination"
+    )
+
+    return Table(
+        Tr(Th("Topic"), Th("Num Upvotes"), Th("Upvote")),
+        *table_body,
+        id='todo-list'
+    ), pagination_controls
 
 serve()
