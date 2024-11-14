@@ -41,7 +41,7 @@ def get():
           A("here", href="https://hamel.dev/blog/posts/evals/"), ", but people want to learn more."
         ),
         Div(
-            Img(src="https://res.cloudinary.com/dwxrm0iul/image/upload/v1731538464/tweet-1733553161884127435_2_cpectu.png", style="width:33%; display: block; margin: 0 auto;"), 
+            Img(src="https://res.cloudinary.com/dwxrm0iul/image/upload/v1731538464/tweet-1733553161884127435_2_cpectu.png", style="width:45%; display: block; margin: 0 auto;"), 
             cls='tweet'
         ),
         Br(),
