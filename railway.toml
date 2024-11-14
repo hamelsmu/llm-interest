@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+buildCommand = "pip install python-fasthtml fastlite"
+
+[deploy]
+startCommand = "python main.py"
+healthcheckPath = "/healthcheck"

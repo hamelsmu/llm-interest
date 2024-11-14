@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = [
+    "python3",
+    "python3Packages.pip",
+]
