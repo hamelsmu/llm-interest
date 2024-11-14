@@ -156,8 +156,8 @@ def get_table(page: int = 1):
     total_pages = (len(sorted_todos) + items_per_page - 1) // items_per_page
     pagination_controls = Div(
         Span(f"Page {page} of {total_pages} | "),
-        A("Previous", href=f"/table?page={page-1}", cls="prev", hx_get=f"/table?page={page-1}", hx_target="#todo-list", hx_swap="innerHTML") if page > 1 else "",
-        A("Next", href=f"/table?page={page+1}", cls="next", hx_get=f"/table?page={page+1}", hx_target="#todo-list", hx_swap="innerHTML") if page < total_pages else "",
+        A(" Previous ", href=f"/table?page={page-1}", cls="prev", hx_get=f"/table?page={page-1}", hx_target="#todo-list", hx_swap="innerHTML") if page > 1 else "",
+        A(" Next", href=f"/table?page={page+1}", cls="next", hx_get=f"/table?page={page+1}", hx_target="#todo-list", hx_swap="innerHTML") if page < total_pages else "",
         cls="pagination"
     )
 
