@@ -50,8 +50,10 @@ def get():
         P("Upvote or add a topic below.  Paginate to see more. I'll write about the top voted topics first."),
     )
 
-    add = Form(Group(mk_input(), Button("Add")),
-               hx_post="/", target_id='todo-list', hx_swap="beforeend")
+    add = Form(
+        Group(mk_input(), Button("Add")),
+        hx_post="/", hx_target="#todo-list tbody", hx_swap="beforeend"
+    )
 
     card = Card(
         Div(id='todo-list', hx_get="/table", hx_trigger="load"),
@@ -96,14 +98,11 @@ def delete(id:int):
     return clear(id_curr)
 
 @rt("/")
-def post(todo:Todo): return todos.insert(todo), mk_input(hx_swap_oob='true')
-
-@rt("/edit/{id}")
-def get(id:int):
-    res = Form(Group(Input(id="title"), Button("Save")),
-        Hidden(id="id"), CheckboxX(id="done", label='Done'),
-        hx_put="/", target_id=tid(id), id="edit")
-    return fill_form(res, todos.get(id))
+def post(todo: Todo):
+    todos.insert(todo)
+    # Create a new row for the inserted todo
+    new_row = todo.__ft__()
+    return new_row, mk_input(hx_swap_oob='true')
 
 @rt("/")
 def put(todo: Todo): return todos.upsert(todo), clear(id_curr)
